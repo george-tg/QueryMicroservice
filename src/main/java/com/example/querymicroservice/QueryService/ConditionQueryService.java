@@ -54,11 +54,9 @@ public class ConditionQueryService
     }
 
     @KafkaListener(topics = "update_condition_event", groupId = "condition_group")
-    public void handleUpdateConditionEvent(ConsumerRecord<String, ConditionDTO> record)
+    public void handleUpdateConditionEvent(ConditionDTO conditionDTO)
     {
-        String idString = record.key(); // Extract the patient ID string from the message key
-        Long id = Long.parseLong(idString); // Convert the patient ID string to Long
-        ConditionDTO conditionDTO = record.value(); // Extract the patient DTO from the message value
+        Long id = conditionDTO.getId();
 
         Patient p = new Patient(conditionDTO.getPatient().getId(),conditionDTO.getPatient().getFirstName(),conditionDTO.getPatient().getLastName(),conditionDTO.getPatient().getAge());
         Condition condition = new Condition(conditionDTO.getConditionName(), p);

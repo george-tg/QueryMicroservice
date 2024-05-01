@@ -28,11 +28,9 @@ public class EncounterQueryService
         repository.save(encounter);
     }
     @KafkaListener(topics = "update_encounter_event", groupId = "encounter_group")
-    public void handleUpdateEncounterEvent(ConsumerRecord<String, EncounterDTO> record)
+    public void handleUpdateEncounterEvent(EncounterDTO encounterDTO)
     {
-        String idString = record.key();
-        Long id = Long.parseLong(idString);
-        EncounterDTO encounterDTO = record.value();
+       Long id = encounterDTO.getId();
         Patient p = new Patient(encounterDTO.getPatientDTO().getId(),encounterDTO.getPatientDTO().getFirstName(),encounterDTO.getPatientDTO().getLastName(),encounterDTO.getPatientDTO().getAge());
         Encounter encounter = new Encounter(encounterDTO.getVisitDate(),p);
         Optional<Encounter> exisitionEncounter = repository.findById(id);

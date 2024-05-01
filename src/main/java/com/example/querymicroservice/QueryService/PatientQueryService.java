@@ -88,11 +88,8 @@ public class PatientQueryService
         patientRepository.save(createdPatient);
     }
     @KafkaListener(topics = "update_patient_event", groupId = "patient_group")
-    public void consumeUpdatePatient(ConsumerRecord<String, PatientDTO> record) {
-        String idString = record.key(); // Extract the patient ID string from the message key
-        Long id = Long.parseLong(idString); // Convert the patient ID string to Long
-        PatientDTO patientDTO = record.value(); // Extract the patient DTO from the message value
-
+    public void consumeUpdatePatient(PatientDTO patientDTO) {
+        Long id = patientDTO.getId();
         Patient p = new Patient(patientDTO.getFirstName(), patientDTO.getLastName(), patientDTO.getAge());
         Optional<Patient> existing = patientRepository.findById(id);
         if (existing.isPresent()) {

@@ -43,12 +43,9 @@ public class ObservationQueryService
         repository.save(observation);
     }
     @KafkaListener(topics = "update_observation_event", groupId = "observation_group")
-    public void handleUpdateObservationEvent(ConsumerRecord<String, ObservationDTO> record)
+    public void handleUpdateObservationEvent(ObservationDTO observationDTO)
     {
-        String idString = record.key(); // Extract the patient ID string from the message key
-        Long id = Long.parseLong(idString); // Convert the patient ID string to Long
-        ObservationDTO observationDTO = record.value(); // Extract the patient DTO from the message value
-
+        Long id = observationDTO.getId();
         Patient p = new Patient(observationDTO.getPatientDTO().getId(),observationDTO.getPatientDTO().getFirstName(),observationDTO.getPatientDTO().getLastName(),observationDTO.getPatientDTO().getAge());
         Observation observation = new Observation(observationDTO.getType(), observationDTO.getValue(),p);
         Optional<Observation> existingCondition = repository.findById(id);
