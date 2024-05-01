@@ -1,4 +1,4 @@
-package com.kth.journalsystem.dto;
+package com.example.querymicroservice.dtos;
 
 
 import com.kth.journalsystem.domain.Condition;

@@ -1,4 +1,4 @@
-package com.example.commandmicroservice.config;
+package com.example.querymicroservice.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

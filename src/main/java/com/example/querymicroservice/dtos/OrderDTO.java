@@ -1,4 +1,4 @@
-package com.kth.journalsystem.dto;
+package com.example.querymicroservice.dtos;
 
 import lombok.Data;
 

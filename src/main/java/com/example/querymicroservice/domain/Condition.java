@@ -1,10 +1,11 @@
-package com.example.commandmicroservice.domain;
+package com.example.querymicroservice.domain;
 
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
-@Table(name = "conditions_command")
+@Table(name = "conditions_query")
 public class Condition
 {
     @Id

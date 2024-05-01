@@ -1,4 +1,4 @@
-package com.example.commandmicroservice.domain;
+package com.example.querymicroservice.domain;
 
 import jakarta.persistence.*;
 
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "encounters_command")
+@Table(name = "encounters_query")
 public class Encounter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

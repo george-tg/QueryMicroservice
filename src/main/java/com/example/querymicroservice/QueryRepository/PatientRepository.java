@@ -1,6 +1,6 @@
-package com.example.commandmicroservice.CommandRepository;
+package com.example.querymicroservice.QueryRepository;
 
-import com.example.commandmicroservice.domain.Patient;
+import com.example.querymicroservice.domain.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

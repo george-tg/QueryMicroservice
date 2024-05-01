@@ -1,4 +1,4 @@
-package com.example.commandmicroservice.config;
+package com.example.querymicroservice.Config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

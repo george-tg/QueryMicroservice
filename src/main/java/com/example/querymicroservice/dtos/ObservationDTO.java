@@ -1,7 +1,7 @@
-package com.kth.journalsystem.dto;
+package com.example.querymicroservice.dtos;
 
 
-import com.kth.journalsystem.domain.Observation;
+import com.example.querymicroservice.domain.Observation;
 
 public class ObservationDTO {
     private Long id;

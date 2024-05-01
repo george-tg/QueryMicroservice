@@ -1,4 +1,4 @@
-package com.example.commandmicroservice.config;
+package com.example.querymicroservice.Config;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;

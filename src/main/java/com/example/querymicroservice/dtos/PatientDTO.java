@@ -1,4 +1,4 @@
-package com.kth.journalsystem.dto;
+package com.example.querymicroservice.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kth.journalsystem.config.AccessTokenUser;

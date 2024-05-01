@@ -1,4 +1,4 @@
-package com.example.commandmicroservice.config;
+package com.example.querymicroservice.Config;
 
 import com.nimbusds.jose.shaded.gson.internal.LinkedTreeMap;
 import org.springframework.security.core.context.SecurityContext;

@@ -1,8 +1,8 @@
-package com.kth.journalsystem.dto;
+package com.example.querymicroservice.dtos;
 
 
 
-import com.kth.journalsystem.domain.Encounter;
+import com.example.querymicroservice.domain.Encounter;
 
 import java.time.LocalDate;
 import java.util.List;
