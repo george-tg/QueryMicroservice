@@ -1,7 +1,7 @@
 package com.example.querymicroservice.dtos;
 
 
-import com.kth.journalsystem.domain.Condition;
+import com.example.querymicroservice.domain.Condition;
 
 public class ConditionDTO
 {

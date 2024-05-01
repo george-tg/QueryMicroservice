@@ -46,7 +46,7 @@ class SecurityConfig {
     private static final String GROUPS = "groups";
     private static final String REALM_ACCESS_CLAIM = "realm_access";
     private static final String ROLES_CLAIM = "roles";
-    private static final String keyString = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3NftVd27zFgvA0oPyNXSOf2fJjKyM0XXwbATJrjKMwaaDcvDEbWi5OvlhTE009zndzFIyGQrw9NTjtZGlmUZ3DL+Y6LjWV5XfWgX21774vxwXr+QTv+KDjW0j2s/BZ++tYqbqdSuMm9YV41Myro5w1fyz4IbILvYfE1Lu+jyELsNV/ELnLCfmNjcHwQnhVPNSqigvFhg3ScsHBuGMfTd7gbeL7wKykiKpVFQwtMGrx0JXd2pPcKSxaSShYtr10Ton9kQs4G6VSQ/qx9LsJhqxCexrCzp6MamBM8p1wh//NUTNDSsE23nje65D5yHBLFMXvVLSmxhXTk9wrZIJCFehQIDAQAB";
+    private static final String keyString = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoKYwa+fqCmV0ymrwNh1ukp4Zt+Ood6L+lps/Q7NMP3bObbPsielU0XS9T96V8TDdD8etoRKhPHFifHV2KbrL1vZumQ8nGLX9Vcq319ze6dfKf5uNiezQipIUJO1oUnU0TKj9kiDDTo330vonKxZIOa8U9iJYs1LaypcCaXJGEK/qsjVqcFqQEUHynmPdeJPSNfKndj+Jh+vDHlbU7mkHOAxBgTVRlxJxbnm3CgqycvkAaRiId0LeyeLDWwIHD5HzXgi+YktCzqa46dp7Ge9JIHlZj8eao/AfnimiV2mBVFAARBKL/c9a+vsZzjqTxfbWS3Zrh2V9KFp1fBveikKWjQIDAQAB";
     private final KeycloakLogoutHandler keycloakLogoutHandler;
 
     SecurityConfig(KeycloakLogoutHandler keycloakLogoutHandler) {
@@ -55,10 +55,10 @@ class SecurityConfig {
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
         Map<String, ClientRegistration> clientRegistrations = new HashMap<>();
-        clientRegistrations.put("journal",
-                ClientRegistration.withRegistrationId("journal")
-                        .clientId("journal") // Replace with your actual client ID
-                        .clientSecret("yWIpK52fU3cAryzVDt3t6qFXDd53g3ad") // Replace with your actual client secret (avoid hardcoding in production)
+        clientRegistrations.put("read-journal",
+                ClientRegistration.withRegistrationId("read-journal")
+                        .clientId("read-journal") // Replace with your actual client ID
+                        .clientSecret("T8fhv3RsTFsB3IdD4ur6kCvOL3nFTZqS") // Replace with your actual client secret (avoid hardcoding in production)
                         .authorizationUri("http://localhost:8181/realms/Journal") // Replace with your actual authorization URI
                         .tokenUri("http://localhost:8181/realms/Journal/protocol/openid-connect/token")  // Likely the correct token URI for Keycloak
                         .userInfoUri("http://localhost:8181/realms/Journal/protocol/openid-connect/userinfo")  // Likely the correct userInfo URI for Keycloak
@@ -96,8 +96,6 @@ class SecurityConfig {
             source.registerCorsConfiguration("/**", config);
             return source.getCorsConfiguration(request);
         }).and().authorizeHttpRequests(auth -> auth
-                .requestMatchers(new AntPathRequestMatcher("/customers*"))
-                .hasRole("doctor")
                 .requestMatchers(new AntPathRequestMatcher("/"))
                 .permitAll()
                 .anyRequest()

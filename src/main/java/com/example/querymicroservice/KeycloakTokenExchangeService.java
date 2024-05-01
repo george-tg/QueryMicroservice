@@ -13,8 +13,8 @@ import java.util.Map;
 @Service
 public class KeycloakTokenExchangeService {
     private static final String TOKEN_EXCHANGE_URL = "http://localhost:8181/realms/Journal/protocol/openid-connect/token";
-    private static final String CLIENT_ID = "journal";
-    private static final String CLIENT_SECRET = "yWIpK52fU3cAryzVDt3t6qFXDd53g3ad";
+    private static final String CLIENT_ID = "read-journal";
+    private static final String CLIENT_SECRET = "T8fhv3RsTFsB3IdD4ur6kCvOL3nFTZqS";
     private final RestTemplate restTemplate = new RestTemplateBuilder().build();
 
     public Map getLimitedScopeToken(String token) throws RestClientException {

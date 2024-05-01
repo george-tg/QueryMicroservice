@@ -7,6 +7,8 @@ import com.example.querymicroservice.domain.Encounter;
 import com.example.querymicroservice.domain.Observation;
 import com.example.querymicroservice.domain.Patient;
 import com.example.querymicroservice.dtos.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,9 @@ public class PatientQueryService
 
     @Autowired
     private PatientRepository patientRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     static PatientDTO convertToDTO(Patient patient) {
         // Convert Patient entity to DTO
@@ -83,7 +88,8 @@ public class PatientQueryService
         patientRepository.deleteById(id);
     }
     @KafkaListener(topics = "create_patient_event", groupId = "patient_group")
-    public void consumeCreatePatientEvent(PatientDTO patient){
+    public void consumeCreatePatientEvent(String jsonPayload) throws JsonProcessingException {
+        PatientDTO patient = objectMapper.readValue(jsonPayload, PatientDTO.class);
         Patient createdPatient = new Patient(patient.getFirstName(), patient.getLastName(), patient.getAge(), patient.getUserId());
         patientRepository.save(createdPatient);
     }

@@ -1,8 +1,10 @@
 package com.example.querymicroservice.dtos;
 
+import com.example.querymicroservice.Config.AccessTokenUser;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kth.journalsystem.config.AccessTokenUser;
+import lombok.Data;
 
+@Data
 public class PatientDTO {
     private AccessTokenUser accessTokenUser;
     private Long id;
