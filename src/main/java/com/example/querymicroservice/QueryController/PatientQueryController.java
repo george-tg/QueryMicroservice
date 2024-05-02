@@ -27,29 +27,18 @@ import java.util.Map;
 public class PatientQueryController
 {
     private static final Logger logger = LoggerFactory.getLogger(PatientQueryService.class);
-    @Autowired
-    private KeycloakTokenExchangeService keycloakTokenExchangeService;
+
     @Autowired
     private PatientQueryService patientEventConsumer;
     @GetMapping("/retrieve/{patientId}")
     @PreAuthorize("hasRole('ROLE_doctor')")
     public ResponseEntity<PatientDetailsDTO> getPatientDetails(@PathVariable Long patientId) throws TimeoutException {
-
-        logger.warn("Token1: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        PatientDetailsDTO patientDTO = patientEventConsumer.readQuery(patientId);
-        return ResponseEntity.ok(patientDTO);
+        return ResponseEntity.ok(patientEventConsumer.readQuery(patientId));
     }
     @GetMapping("/all")
     @PreAuthorize("hasRole('ROLE_doctor')")
     public ResponseEntity<List<PatientDTO>> getAllPatient() {
         try {
-            AccessTokenUser accessTokenUser = AccessTokenUser.convert(SecurityContextHolder.getContext());
-            logger.warn("Token: " + accessTokenUser);
-            Map response = keycloakTokenExchangeService.getLimitedScopeToken(accessTokenUser.getToken());
-            accessTokenUser.setScopes(Arrays.stream(response.get("scope").toString().split(" ")).toList());
-            accessTokenUser.setToken(response.get("access_token").toString());
-            logger.warn("Tokenexchagne : " + accessTokenUser);
-
             return ResponseEntity.ok(patientEventConsumer.readAllPatientsQuery());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);

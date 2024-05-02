@@ -1,10 +1,14 @@
 package com.example.querymicroservice.dtos;
 
 
+import com.example.querymicroservice.Config.AccessTokenUser;
 import com.example.querymicroservice.domain.Condition;
+import lombok.Data;
 
+@Data
 public class ConditionDTO
 {
+    private AccessTokenUser accessTokenUser;
     private Long id;
     private String conditionName;
     private PatientDTO patient;
@@ -22,6 +26,14 @@ public class ConditionDTO
         this.id = id;
         this.conditionName = conditionName;
         this.patient = patient;
+    }
+
+    public AccessTokenUser getAccessTokenUser() {
+        return accessTokenUser;
+    }
+
+    public void setAccessTokenUser(AccessTokenUser accessTokenUser) {
+        this.accessTokenUser = accessTokenUser;
     }
 
     public Long getId() {

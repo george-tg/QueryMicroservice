@@ -7,6 +7,9 @@ import com.example.querymicroservice.domain.Observation;
 import com.example.querymicroservice.domain.Patient;
 import com.example.querymicroservice.dtos.ConditionDTO;
 import com.example.querymicroservice.dtos.ObservationDTO;
+import com.example.querymicroservice.dtos.PatientDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +27,8 @@ public class ConditionQueryService
 
     @Autowired
     private ConditionRepository repository;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public ConditionDTO consumeReadEvent(Long id) {
         Condition condition = repository.findById(id).orElse(null);
@@ -48,9 +54,17 @@ public class ConditionQueryService
     }
 
     @KafkaListener(topics = "create_condition_event", groupId = "condition_group")
-    public void handleCreateConditionEvent(ConditionDTO conditionDTO) {
-        Condition condition = new Condition(conditionDTO.getConditionName(), new Patient(conditionDTO.getPatient().getFirstName(),conditionDTO.getPatient().getLastName(),conditionDTO.getPatient().getAge()));
-        repository.save(condition);
+    public void handleCreateConditionEvent(String jsonPayload) {
+        try {
+            ConditionDTO conditionDTO = objectMapper.readValue(jsonPayload, ConditionDTO.class);
+            List<String> scopes = conditionDTO.getAccessTokenUser().getScopes();
+            if(scopes.size() == 1 && scopes.get(0).equals("condition")) {
+                Condition condition = new Condition(conditionDTO.getConditionName(), new Patient(conditionDTO.getPatient().getId(), conditionDTO.getPatient().getFirstName(),conditionDTO.getPatient().getLastName(),conditionDTO.getPatient().getAge()));
+                repository.save(condition);
+            }
+        } catch (JsonProcessingException e) {
+            logger.error("Error serializing ConditionDTO to JSON while creating condition: " + e.getMessage(), e);
+        }
     }
 
     @KafkaListener(topics = "update_condition_event", groupId = "condition_group")
