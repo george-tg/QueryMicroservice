@@ -2,6 +2,7 @@ package com.example.querymicroservice.dtos;
 
 
 
+import com.example.querymicroservice.Config.AccessTokenUser;
 import com.example.querymicroservice.domain.Encounter;
 
 import java.time.LocalDate;
@@ -9,16 +10,23 @@ import java.util.List;
 
 public class EncounterDTO
 {
+    private AccessTokenUser accessTokenUser;
     private Long id;
     private LocalDate visitDate;
     private PatientDTO patientDTO;
 
-    private List<ObservationDTO> observations;
-
+    private ObservationDTO observationDTO;
     public EncounterDTO()
     {
 
     }
+
+    public EncounterDTO(LocalDate visitDate, PatientDTO patientDTO, ObservationDTO observationDTO) {
+        this.visitDate = visitDate;
+        this.patientDTO = patientDTO;
+        this.observationDTO = observationDTO;
+    }
+
 
     public EncounterDTO(LocalDate visitDate, PatientDTO patient) {
         this.visitDate = visitDate;
@@ -38,6 +46,15 @@ public class EncounterDTO
         // Set other fields as needed
         return dto;
     }
+
+    public AccessTokenUser getAccessTokenUser() {
+        return accessTokenUser;
+    }
+
+    public void setAccessTokenUser(AccessTokenUser accessTokenUser) {
+        this.accessTokenUser = accessTokenUser;
+    }
+
     public PatientDTO getPatientDTO() {
         return patientDTO;
     }
@@ -62,4 +79,11 @@ public class EncounterDTO
         this.visitDate = visitDate;
     }
 
+    public ObservationDTO getObservationDTO() {
+        return observationDTO;
+    }
+
+    public void setObservationDTO(ObservationDTO observationDTO) {
+        this.observationDTO = observationDTO;
+    }
 }
