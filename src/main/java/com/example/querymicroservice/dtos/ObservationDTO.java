@@ -18,6 +18,14 @@ public class ObservationDTO {
         this.patientDTO = patientDTO;
     }
 
+    public ObservationDTO(Long id, String type, double value, PatientDTO patientDTO, Long encounterId) {
+        this.id = id;
+        this.type = type;
+        this.value = value;
+        this.patientDTO = patientDTO;
+        this.encounterId = encounterId;
+    }
+
     public ObservationDTO() {
     }
 

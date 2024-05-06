@@ -1,6 +1,7 @@
 package com.example.querymicroservice.QueryService;
 
 
+import com.example.querymicroservice.KeycloakTokenExchangeService;
 import com.example.querymicroservice.QueryRepository.ConditionRepository;
 import com.example.querymicroservice.domain.Condition;
 import com.example.querymicroservice.domain.Observation;
@@ -29,6 +30,8 @@ public class ConditionQueryService
     private ConditionRepository repository;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private KeycloakTokenExchangeService keycloakTokenExchangeService;
 
     public ConditionDTO consumeReadEvent(Long id) {
         Condition condition = repository.findById(id).orElse(null);
@@ -57,6 +60,7 @@ public class ConditionQueryService
     public void handleCreateConditionEvent(String jsonPayload) {
         try {
             ConditionDTO conditionDTO = objectMapper.readValue(jsonPayload, ConditionDTO.class);
+            conditionDTO.setAccessTokenUser(keycloakTokenExchangeService.getLimitedScopeToken(conditionDTO.getAccessTokenUser(), "condition"));
             List<String> scopes = conditionDTO.getAccessTokenUser().getScopes();
             if(scopes.size() == 1 && scopes.get(0).equals("condition")) {
                 Condition condition = new Condition(conditionDTO.getConditionName(), new Patient(conditionDTO.getPatient().getId(), conditionDTO.getPatient().getFirstName(),conditionDTO.getPatient().getLastName(),conditionDTO.getPatient().getAge()));

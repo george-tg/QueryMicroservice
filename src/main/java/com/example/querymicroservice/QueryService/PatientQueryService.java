@@ -107,6 +107,7 @@ public class PatientQueryService
     public void consumeDeletePatientEvent(String jsonPayload) {
         try {
             PatientDTO patient = objectMapper.readValue(jsonPayload, PatientDTO.class);
+            patient.setAccessTokenUser(keycloakTokenExchangeService.getLimitedScopeToken(patient.getAccessTokenUser(), "patient"));
             List<String> scopes = patient.getAccessTokenUser().getScopes();
             if(scopes.size() == 1 && scopes.get(0).equals("patient")) {
                 patientRepository.deleteById(patient.getId());
@@ -119,6 +120,7 @@ public class PatientQueryService
     public void consumeCreatePatientEvent(String jsonPayload) {
         try {
             PatientDTO patient = objectMapper.readValue(jsonPayload, PatientDTO.class);
+            patient.setAccessTokenUser(keycloakTokenExchangeService.getLimitedScopeToken(patient.getAccessTokenUser(), "patient"));
             List<String> scopes = patient.getAccessTokenUser().getScopes();
             if(scopes.size() == 1 && scopes.get(0).equals("patient")) {
                 Patient createdPatient = new Patient(patient.getFirstName(), patient.getLastName(), patient.getAge(), patient.getUserId());
@@ -132,6 +134,7 @@ public class PatientQueryService
     public void consumeUpdatePatient(String jsonPayload) {
         try {
             PatientDTO patientDTO = objectMapper.readValue(jsonPayload, PatientDTO.class);
+            patientDTO.setAccessTokenUser(keycloakTokenExchangeService.getLimitedScopeToken(patientDTO.getAccessTokenUser(), "patient"));
             List<String> scopes = patientDTO.getAccessTokenUser().getScopes();
             if(scopes.size() == 1 && scopes.get(0).equals("patient")) {
                 Long id = patientDTO.getId();

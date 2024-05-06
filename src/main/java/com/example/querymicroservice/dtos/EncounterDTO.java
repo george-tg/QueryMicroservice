@@ -39,6 +39,13 @@ public class EncounterDTO
         this.patientDTO = patient;
     }
 
+    public EncounterDTO(Long id, LocalDate visitDate, PatientDTO patientDTO, List<ObservationDTO> observationDTO) {
+        this.id = id;
+        this.visitDate = visitDate;
+        this.patientDTO = patientDTO;
+        this.observationDTO = observationDTO.get(0);
+    }
+
     public static EncounterDTO fromEntity(Encounter entity) {
         EncounterDTO dto = new EncounterDTO();
         dto.setId(entity.getId());

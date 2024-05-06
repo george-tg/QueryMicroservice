@@ -4,8 +4,10 @@ package com.example.querymicroservice.QueryService;
 import com.example.querymicroservice.KeycloakTokenExchangeService;
 import com.example.querymicroservice.QueryRepository.EncounterRepository;
 import com.example.querymicroservice.domain.Encounter;
+import com.example.querymicroservice.domain.Observation;
 import com.example.querymicroservice.domain.Patient;
 import com.example.querymicroservice.dtos.EncounterDTO;
+import com.example.querymicroservice.dtos.ObservationDTO;
 import com.example.querymicroservice.dtos.PatientDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,10 +31,13 @@ public class EncounterQueryService
 
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private KeycloakTokenExchangeService keycloakTokenExchangeService;
     @KafkaListener(topics = "create_encounter_event", groupId = "encounter_group")
     public void handleCreateEncounterEvent(String jsonPayload) {
         try {
             EncounterDTO encounterDTO = objectMapper.readValue(jsonPayload, EncounterDTO.class);
+            encounterDTO.setAccessTokenUser(keycloakTokenExchangeService.getLimitedScopeToken(encounterDTO.getAccessTokenUser(), "encounter observation"));
             List<String> scopes = encounterDTO.getAccessTokenUser().getScopes();
             if(scopes.size() == 2 && scopes.contains("encounter") && scopes.contains("observation")) {
                 Patient p = new Patient(encounterDTO.getPatientDTO().getId(),encounterDTO.getPatientDTO().getFirstName(),encounterDTO.getPatientDTO().getLastName(),encounterDTO.getPatientDTO().getAge());
@@ -57,7 +63,12 @@ public class EncounterQueryService
         }
     }
     static EncounterDTO convertToDTO(Encounter encounter) {
-        return new EncounterDTO(encounter.getId(),encounter.getVisitDate(), PatientQueryService.convertToDTO(encounter.getPatient()));
+        List<Observation> observations = encounter.getObservations();
+        List<ObservationDTO> observationDTOS = new ArrayList<>();
+        for (Observation observation : observations) {
+            observationDTOS.add(ObservationQueryService.convertToDTO(observation));
+        }
+        return new EncounterDTO(encounter.getId(),encounter.getVisitDate(), PatientQueryService.convertToDTO(encounter.getPatient()), observationDTOS);
     }
 
 

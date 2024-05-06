@@ -1,6 +1,7 @@
 package com.example.querymicroservice.QueryService;
 
 
+import com.example.querymicroservice.KeycloakTokenExchangeService;
 import com.example.querymicroservice.QueryRepository.EncounterRepository;
 import com.example.querymicroservice.QueryRepository.ObservationRepository;
 import com.example.querymicroservice.domain.Encounter;
@@ -31,6 +32,8 @@ public class ObservationQueryService
 
     @Autowired
     private EncounterRepository encounterRepository;
+    @Autowired
+    private KeycloakTokenExchangeService keycloakTokenExchangeService;
 
     public ObservationDTO consumeReadEvent(Long id) {
 
@@ -50,6 +53,7 @@ public class ObservationQueryService
     public void handleCreateObservationEvent(String jsonPayload) {
         try {
             ObservationDTO observationDTO = objectMapper.readValue(jsonPayload, ObservationDTO.class);
+            observationDTO.setAccessTokenUser(keycloakTokenExchangeService.getLimitedScopeToken(observationDTO.getAccessTokenUser(), "observation"));
             List<String> scopes = observationDTO.getAccessTokenUser().getScopes();
             if(scopes.size() == 1 && scopes.contains("observation")) {
                 Patient p = new Patient(observationDTO.getPatientDTO().getId(),observationDTO.getPatientDTO().getFirstName(),observationDTO.getPatientDTO().getLastName(),observationDTO.getPatientDTO().getAge());
@@ -83,6 +87,6 @@ public class ObservationQueryService
 
     static ObservationDTO convertToDTO(Observation observation) {
 
-        return new ObservationDTO(observation.getId().toString(), observation.getValue(), PatientQueryService.convertToDTO(observation.getPatient()));
+        return new ObservationDTO(observation.getId(), observation.getType(), observation.getValue(), PatientQueryService.convertToDTO(observation.getPatient()), observation.getEncounter().getId());
     }
 }
